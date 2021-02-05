@@ -1,20 +1,6 @@
 // main.js
-/*
-    volume-image
-    volume-number
-    volume-slider
 
-    volume-level-3: 67-100
-    volume-level-2: 34-66
-    volume-level-1: 1-33
-    volume-level-0: 0
-
-    change audio: sound-image, horn-sound
-    horn-btn
-*/
-// TODO
-
-function updateSoundImage(volume) {
+function updateVolumeImage(volume) {
     let volumeImage = document.getElementById("volume-image");
     if (volume == 0) {
         volumeImage.src = "./assets/media/icons/volume-level-0.svg"
@@ -30,33 +16,45 @@ function updateSoundImage(volume) {
     }
 }
 
-
+let volume = 100;
 let volumeNumber = document.getElementById("volume-number");
-var volumeSlider = document.getElementById("volume-slider");
-
-
 volumeNumber.addEventListener('input', function() {
-    let volume = volumeNumber.value;
+    volume = volumeNumber.value;
     if (volume > 100) {
         volumeNumber.value = 100;
     }
-    else if (volume < 0) {
+    else if (volume <= 0) {
         volumeNumber.value = 0;
+        honkButton.disabled = true;
+    }
+    else {
+        honkButton.disabled = false;
     }
     volumeSlider.value = volume;
-    updateSoundImage(volume);
+    updateVolumeImage(volume);
 });
 
+let volumeSlider = document.getElementById("volume-slider");
 volumeSlider.addEventListener("mousemove", function() {
-    let volume = volumeSlider.value;
+    volume = volumeSlider.value;
+    (volume == 0) ? honkButton.disabled = true : honkButton.disabled = false;
     volumeNumber.value = volumeSlider.value;
-    updateSoundImage(volume);
+    updateVolumeImage(volume);
 })
 
 let honkButton = document.getElementById("honk-btn");
 honkButton.addEventListener('click', function(e) {
     e.preventDefault();
-    document.getElementById('horn-sound').play();
+    let honkButton = document.getElementById('horn-sound')
+    honkButton.volume = volume / 100;
+    honkButton.play();
 });
 
 let audioSelection = document.querySelectorAll("input[type=radio]");
+audioSelection.forEach(function(btn) {
+    btn.addEventListener('click', () => {
+        let hornType = btn.id.replace('radio-','');
+        document.getElementById('sound-image').src = `./assets/media/images/${hornType}.svg`;
+        document.getElementById('horn-sound').src = `./assets/media/audio/${hornType}.mp3`;
+    })
+})
