@@ -47,9 +47,16 @@ volumeNumber.addEventListener('input', function() {
     updateSoundImage(volume);
 });
 
-volumeSlider.onchange = function() {
+volumeSlider.addEventListener("mousemove", function() {
     let volume = volumeSlider.value;
     volumeNumber.value = volumeSlider.value;
     updateSoundImage(volume);
-}
+})
 
+let honkButton = document.getElementById("honk-btn");
+honkButton.addEventListener('click', function(e) {
+    e.preventDefault();
+    document.getElementById('horn-sound').play();
+});
+
+let audioSelection = document.querySelectorAll("input[type=radio]");
